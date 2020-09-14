@@ -1,2 +1,7 @@
 # Control what to be logged using format "module=level,module=level"; `*` means all other modules
 logging: "*=info"
+
+filstats:
+  addr: "localhost:3002"
+  tls: false
+  client-name: "Client"
