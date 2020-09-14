@@ -1,0 +1,2 @@
+# Control what to be logged using format "module=level,module=level"; `*` means all other modules
+logging: "*=info"
