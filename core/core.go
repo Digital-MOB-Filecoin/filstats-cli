@@ -6,9 +6,9 @@ import (
 	proto "github.com/digital-mob-filecoin/filstats-proto"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/metadata"
-)
 
-var log = logrus.WithField("module", "core")
+	"github.com/digital-mob-filecoin/filstats-client/node"
+)
 
 type FilstatsConfig struct {
 	ServerAddr string
@@ -25,25 +25,54 @@ type Core struct {
 	config Config
 	token  string
 
+	logger *logrus.Entry
+
 	filstatsServer proto.FilstatsClient
+
+	node node.Node
 }
 
-func New(config Config) *Core {
+func New(config Config, node node.Node) (*Core, error) {
 	c := &Core{
 		config: config,
+		node:   node,
+		logger: logrus.WithField("module", "core"),
 	}
 
-	c.initServerConnection()
+	err := c.initServerConnection()
+	if err != nil {
+		return nil, err
+	}
 
-	return c
+	err = c.searchToken()
+	if err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
-func (c *Core) Run() {
-	c.filstatsRegister()
+func (c *Core) Run(ctx context.Context) error {
+	err := c.filstatsRegister()
+	if err != nil {
+		return err
+	}
+
+loop:
+	for {
+		select {
+		case <-ctx.Done():
+			break loop
+		default:
+		}
+
+	}
+
+	return nil
 }
 
 func (c *Core) Close() {
-	log.Info("Got stop signal")
+	c.logger.Info("Got stop signal")
 }
 
 func (c *Core) contextWithToken() context.Context {

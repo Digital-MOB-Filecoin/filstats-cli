@@ -8,30 +8,31 @@ import (
 	"github.com/pkg/errors"
 )
 
+// searchToken verifies if there's any existing auth token stored on disk
+// the token is used to identify a client that is already registered with the Filstats server
 func (c *Core) searchToken() error {
-	log.Debug("looking for existing token")
+	c.logger.Debug("looking for existing token")
 
 	fileName := path.Join(c.config.DataFolder, TokenFile)
 	dat, err := ioutil.ReadFile(fileName)
 	if os.IsNotExist(err) {
-		log.Warn("could not find any token on disk")
-
 		return nil
 	} else if err != nil {
 		return errors.Wrap(err, "could not read token file from disk")
 	}
 
-	log.Debug("found token")
+	c.logger.Debug("found token")
 
 	c.token = string(dat)
 
 	return nil
 }
 
+// writeToken stores the auth token to disk
 func (c *Core) writeToken(token string) error {
-	log.Debug("persisting token to disk")
+	c.logger.Debug("persisting token to disk")
 	defer func() {
-		log.Debug("done persisting token")
+		c.logger.Debug("done persisting token")
 	}()
 
 	fileName := path.Join(c.config.DataFolder, TokenFile)

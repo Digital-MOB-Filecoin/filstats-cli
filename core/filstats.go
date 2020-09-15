@@ -11,7 +11,7 @@ import (
 )
 
 func (c *Core) initServerConnection() error {
-	log.WithField("server-addr", c.config.Filstats.ServerAddr).Info("setting up server connection")
+	c.logger.WithField("server-addr", c.config.Filstats.ServerAddr).Info("setting up server connection")
 
 	var conn *grpc.ClientConn
 	var err error
@@ -31,26 +31,32 @@ func (c *Core) initServerConnection() error {
 		return errors.Wrap(err, "could not connect to server")
 	}
 
-	log.Info("connection successful; initializing Filstats client")
+	c.logger.Info("connection successful; initializing Filstats client")
 
 	c.filstatsServer = proto.NewFilstatsClient(conn)
 
-	log.Info("done initializing Filstats client")
+	c.logger.Info("done initializing Filstats client")
 
 	return nil
 }
 
+// Call the Register function on the Filstats server
 func (c *Core) filstatsRegister() error {
-	log.Info("outgoing request: Register")
+	c.logger.Info("outgoing request: Register")
 
 	start := time.Now()
 	defer func() {
-		log.WithField("duration", time.Since(start)).Info("done Filstats register")
+		c.logger.WithField("duration", time.Since(start)).Info("done Filstats register")
 	}()
+
+	version, err := c.node.GetVersion()
+	if err != nil {
+		return err
+	}
 
 	resp, err := c.filstatsServer.Register(c.contextWithToken(), &proto.RegisterRequest{
 		Name:    c.config.Filstats.ClientName,
-		Version: "",
+		Version: version,
 	})
 	if err != nil {
 		return errors.Wrap(err, "could not execute Register request")
@@ -58,6 +64,12 @@ func (c *Core) filstatsRegister() error {
 
 	if resp.Status != proto.Status_OK {
 		return errors.New("expected status OK from filstats server; got error")
+	}
+
+	// persist the token received from server
+	err = c.writeToken(resp.Token)
+	if err != nil {
+		return errors.Wrap(err, "could not persist token")
 	}
 
 	return nil
