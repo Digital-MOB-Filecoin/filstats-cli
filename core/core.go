@@ -2,10 +2,14 @@ package core
 
 import (
 	"context"
+	"time"
 
 	proto "github.com/digital-mob-filecoin/filstats-proto"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 
 	"github.com/digital-mob-filecoin/filstats-client/node"
 )
@@ -52,21 +56,55 @@ func New(config Config, node node.Node) (*Core, error) {
 	return c, nil
 }
 
+func (c *Core) sendHeartbeat(ctx context.Context) {
+	ticker := time.NewTicker(HeartbeatInterval)
+
+	for {
+		select {
+		case <-ticker.C:
+			c.logger.Trace("sending heartbeat")
+
+			_, err := c.filstatsServer.Heartbeat(c.contextWithToken(), &proto.HeartbeatRequest{})
+			if err != nil {
+				st, ok := status.FromError(err)
+				if ok {
+					switch st.Code() {
+					case codes.Unauthenticated:
+						// this could happen if the server crashed and lost the authenticated clients
+						err2 := c.filstatsRegister()
+						if err2 != nil {
+							c.logger.Fatal(errors.Wrap(err2, "could not re-register after Unauthenticated code"))
+						}
+
+						continue
+					case codes.Unavailable:
+						c.logger.Error("could not reach Filstats server")
+						continue
+					default:
+
+					}
+				} else {
+					c.logger.Errorf("could not send heartbeat, got: %s", err)
+
+					continue
+				}
+			}
+
+			c.logger.Trace("done sending heartbeat")
+		case <-ctx.Done():
+			ticker.Stop()
+			return
+		}
+	}
+}
+
 func (c *Core) Run(ctx context.Context) error {
 	err := c.filstatsRegister()
 	if err != nil {
 		return err
 	}
 
-loop:
-	for {
-		select {
-		case <-ctx.Done():
-			break loop
-		default:
-		}
-
-	}
+	c.sendHeartbeat(ctx)
 
 	return nil
 }
