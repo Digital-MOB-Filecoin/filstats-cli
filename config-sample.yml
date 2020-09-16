@@ -1,2 +1,22 @@
 # Control what to be logged using format "module=level,module=level"; `*` means all other modules
 logging: "*=info"
+
+filstats:
+  # Address of the Filstats server's gRPC api
+  addr: "localhost:3002"
+
+  # Enable/disable the secure connection to Filstats server
+  tls: false
+
+  # The name that will be displayed in the Filstats dashboard
+  client-name: "Client"
+
+# The folder where filstats-client will persist information. Used mostly to persist the auth token.
+data-folder: "./"
+
+node:
+  # The type of Filecoin node we'll extract data from
+  type: "lotus"
+
+  # The address of the node's RPC api
+  addr: "http://localhost:1234/rpc/v0"
