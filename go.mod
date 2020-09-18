@@ -1,6 +1,7 @@
 module github.com/digital-mob-filecoin/filstats-client
 
 require (
+	github.com/davecgh/go-spew v1.1.1
 	github.com/digital-mob-filecoin/filstats-proto v0.0.0-20200916155824-9c9378791f85
 	github.com/elazarl/goproxy v0.0.0-20200809112317-0581fc3aee2d // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

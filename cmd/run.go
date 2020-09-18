@@ -38,7 +38,8 @@ var runCmd = &cobra.Command{
 	runLoop:
 		for {
 			node := lotus.New(lotus.Config{
-				Url: viper.GetString("node.addr"),
+				Url:   viper.GetString("node.addr"),
+				Token: viper.GetString("node.auth-token"),
 			})
 
 			c, err := core.New(core.Config{
@@ -88,6 +89,9 @@ func init() {
 
 	runCmd.Flags().String("node.addr", "http://localhost:1234/rpc/v0", "The address of the node's RPC api")
 	viper.BindPFlag("node.addr", runCmd.Flag("node.addr"))
+
+	runCmd.Flags().String("node.auth-token", "", "Authorization Bearer token to authenticate RPC requests to the node")
+	viper.BindPFlag("node.auth-token", runCmd.Flag("node.auth-token"))
 
 	runCmd.Flags().String("data-folder", ".", "The folder where filstats-client will persist information. Used mostly to persist the auth token.")
 	viper.BindPFlag("data-folder", runCmd.Flag("data-folder"))

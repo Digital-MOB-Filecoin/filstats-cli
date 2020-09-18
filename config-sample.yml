@@ -20,3 +20,6 @@ node:
 
   # The address of the node's RPC api
   addr: "http://localhost:1234/rpc/v0"
+
+  # Token to be used for authorization via bearer token; leave empty to disable
+  auth-token: ""
