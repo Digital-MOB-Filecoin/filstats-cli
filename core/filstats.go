@@ -66,6 +66,8 @@ func (c *Core) filstatsRegister() error {
 		return errors.New("expected status OK from filstats server; got error")
 	}
 
+	c.token = resp.Token
+
 	// persist the token received from server
 	err = c.writeToken(resp.Token)
 	if err != nil {
