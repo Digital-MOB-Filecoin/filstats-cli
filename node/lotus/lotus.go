@@ -60,3 +60,7 @@ func (n Node) GetPeers() (int, error) {
 
 	return len(data), nil
 }
+
+func (n Node) Close() {
+	n.closer()
+}
