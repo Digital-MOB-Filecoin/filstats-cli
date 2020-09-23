@@ -104,8 +104,6 @@ func (c *Core) Run(ctx context.Context) error {
 		return err
 	}
 
-	c.node.GetPeers()
-
 	c.sendHeartbeat(ctx)
 
 	return nil

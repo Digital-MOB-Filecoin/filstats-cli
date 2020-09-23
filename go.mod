@@ -35,4 +35,4 @@ require (
 	moul.io/http2curl v1.0.0 // indirect
 )
 
-go 1.13
+go 1.15
