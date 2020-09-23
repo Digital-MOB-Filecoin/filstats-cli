@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/digital-mob-filecoin/filstats-client/core"
-	"github.com/digital-mob-filecoin/filstats-client/node/lotus"
+	"github.com/digital-mob-filecoin/filstats-cli/core"
+	"github.com/digital-mob-filecoin/filstats-cli/node/lotus"
 )
 
 var runCmd = &cobra.Command{

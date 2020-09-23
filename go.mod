@@ -1,4 +1,4 @@
-module github.com/digital-mob-filecoin/filstats-client
+module github.com/digital-mob-filecoin/filstats-cli
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

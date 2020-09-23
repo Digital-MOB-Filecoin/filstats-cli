@@ -20,7 +20,7 @@ type Node struct {
 	logger *logrus.Entry
 
 	closer jsonrpc.ClientCloser
-	api apistruct.FullNodeStruct
+	api    apistruct.FullNodeStruct
 }
 
 func New(config Config) *Node {
@@ -60,4 +60,3 @@ func (n Node) GetPeers() (int, error) {
 
 	return len(data), nil
 }
-

@@ -1,1 +1,1 @@
-# filstats-client
+# filstats-cli

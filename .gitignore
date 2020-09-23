@@ -31,5 +31,5 @@ tmp/
 .gdb_history
 
 config.yml
-filstats-client
+filstats-cli
 token.dat
