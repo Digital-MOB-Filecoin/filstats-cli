@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
-	"github.com/digital-mob-filecoin/filstats-client/node"
+	"github.com/digital-mob-filecoin/filstats-cli/node"
 )
 
 type FilstatsConfig struct {

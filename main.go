@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/digital-mob-filecoin/filstats-client/cmd"
+	"github.com/digital-mob-filecoin/filstats-cli/cmd"
 )
 
 var (

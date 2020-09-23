@@ -13,12 +13,12 @@ import (
 var log = logrus.WithField("module", "main")
 
 var (
-	config  string
-	version bool
+	config            string
+	version           bool
 	verbose, vverbose bool
 
 	RootCmd = &cobra.Command{
-		Use:   "filstats-client",
+		Use:   "filstats-cli",
 		Short: "Client application for Filstats",
 		Long:  "This app extracts relevant information from a Filecoin node and sends it to the Filstats server.",
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {

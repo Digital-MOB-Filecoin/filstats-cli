@@ -1,57 +1,66 @@
 package lotus
 
 import (
-	"encoding/json"
+	"context"
 	"net/http"
 
-	"github.com/parnurzeal/gorequest"
+	"github.com/filecoin-project/go-jsonrpc"
+	"github.com/filecoin-project/lotus/api/apistruct"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type Config struct {
-	Url string
+	Url   string
+	Token string
 }
 
 type Node struct {
 	config Config
+	logger *logrus.Entry
+
+	closer jsonrpc.ClientCloser
+	api    apistruct.FullNodeStruct
 }
 
 func New(config Config) *Node {
-	return &Node{config: config}
-}
-
-func (n Node) sendRequest(method string, params ...interface{}) (string, error) {
-	payload := map[string]interface{}{
-		"jsonrpc": "2.0",
-		"method":  method,
-		"params":  params,
-		"id":      1,
+	n := &Node{
+		config: config,
+		logger: logrus.WithField("module", "lotus"),
 	}
 
-	req := gorequest.New()
-	resp, body, errs := req.Post(n.config.Url).Send(payload).End()
-	if len(errs) > 0 {
-		return "", errors.Wrap(errs[0], "could not execute rpc request")
+	headers := http.Header{"Authorization": []string{"Bearer " + config.Token}}
+
+	var api apistruct.FullNodeStruct
+	closer, err := jsonrpc.NewMergeClient(context.Background(), "ws://"+config.Url+"/rpc/v0", "Filecoin", []interface{}{&api.Internal, &api.CommonStruct.Internal}, headers)
+	if err != nil {
+		n.logger.Fatalf("connecting with lotus failed: %s", err)
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return "", errors.Errorf("expected status 200, got %s", resp.Status)
-	}
+	n.closer = closer
+	n.api = api
 
-	return body, nil
+	return n
 }
 
 func (n Node) GetVersion() (string, error) {
-	data, err := n.sendRequest("Filecoin.Version")
+	version, err := n.api.Version(context.Background())
 	if err != nil {
 		return "", err
 	}
 
-	var versionResp Version
-	err = json.Unmarshal([]byte(data), &versionResp)
+	return version.Version, nil
+}
+
+func (n Node) GetPeers() (int, error) {
+	data, err := n.api.NetPeers(context.Background())
 	if err != nil {
-		return "", errors.Wrap(err, "could not decode response from node")
+		return 0, errors.Wrap(err, "could not call NetPeers")
 	}
 
-	return versionResp.Result.Version, nil
+	return len(data), nil
+}
+
+func (n Node) Close() {
+	n.closer()
 }
