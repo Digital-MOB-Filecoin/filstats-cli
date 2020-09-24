@@ -1,8 +1,8 @@
 module github.com/digital-mob-filecoin/filstats-cli
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/digital-mob-filecoin/filstats-proto v0.0.0-20200916155824-9c9378791f85
+	github.com/bep/debounce v1.2.0
+	github.com/digital-mob-filecoin/filstats-proto v0.0.0-20200924150356-4f85245a1582
 	github.com/elazarl/goproxy v0.0.0-20200809112317-0581fc3aee2d // indirect
 	github.com/filecoin-project/go-jsonrpc v0.1.2-0.20200822201400-474f4fdccc52
 	github.com/filecoin-project/lotus v0.7.1
@@ -23,11 +23,12 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.5.0
 	github.com/stretchr/testify v1.6.1 // indirect
-	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
-	golang.org/x/sys v0.0.0-20200916084744-dbad9cb7cb7a // indirect
+	golang.org/x/net v0.0.0-20200923182212-328152dc79b1 // indirect
+	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
+	golang.org/x/sys v0.0.0-20200923182605-d9f96fdee20d // indirect
 	golang.org/x/text v0.3.3 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/genproto v0.0.0-20200916143405-f6a2fa72f0c4 // indirect
+	google.golang.org/genproto v0.0.0-20200924141100-a14c0a98937d // indirect
 	google.golang.org/grpc v1.32.0
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect

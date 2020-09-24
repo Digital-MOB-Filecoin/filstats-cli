@@ -1,11 +1,14 @@
 package core
 
 import (
+	"context"
 	"io/ioutil"
 	"os"
 	"path"
+	"time"
 
 	"github.com/pkg/errors"
+	"google.golang.org/grpc/metadata"
 )
 
 // searchToken verifies if there's any existing auth token stored on disk
@@ -46,4 +49,16 @@ func (c *Core) writeToken(token string) error {
 	}
 
 	return nil
+}
+
+// contextWithToken appends the auth token to the grpc request metadata
+func (c *Core) contextWithToken(ctx context.Context) context.Context {
+	// if we found any token persisted, use that to identify the client with the server
+	if c.token != "" {
+		ctx = metadata.AppendToOutgoingContext(ctx, "token", c.token)
+	}
+
+	ctx = metadata.AppendToOutgoingContext(ctx, "sentat", time.Now().UTC().Format(time.RFC3339))
+
+	return ctx
 }
