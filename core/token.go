@@ -58,7 +58,7 @@ func (c *Core) contextWithToken(ctx context.Context) context.Context {
 		ctx = metadata.AppendToOutgoingContext(ctx, "token", c.token)
 	}
 
-	ctx = metadata.AppendToOutgoingContext(ctx, "sentat", time.Now().UTC().Format(time.RFC3339))
+	ctx = metadata.AppendToOutgoingContext(ctx, "sentat", time.Now().UTC().Format(time.RFC3339Nano))
 
 	return ctx
 }
