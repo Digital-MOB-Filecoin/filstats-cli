@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"crypto/tls"
 	"time"
 
@@ -34,6 +35,7 @@ func (c *Core) initServerConnection() error {
 	c.logger.Info("connection successful; initializing Filstats client")
 
 	c.filstatsServer = proto.NewFilstatsClient(conn)
+	c.filstatsTelemetry = proto.NewTelemetryClient(conn)
 
 	c.logger.Info("done initializing Filstats client")
 
@@ -41,7 +43,7 @@ func (c *Core) initServerConnection() error {
 }
 
 // Call the Register function on the Filstats server
-func (c *Core) filstatsRegister() error {
+func (c *Core) filstatsRegister(ctx context.Context) error {
 	c.logger.Info("outgoing request: Register")
 
 	start := time.Now()
@@ -54,7 +56,7 @@ func (c *Core) filstatsRegister() error {
 		return err
 	}
 
-	resp, err := c.filstatsServer.Register(c.contextWithToken(), &proto.RegisterRequest{
+	resp, err := c.filstatsServer.Register(c.contextWithToken(ctx), &proto.RegisterRequest{
 		Name:    c.config.Filstats.ClientName,
 		Version: version,
 	})
