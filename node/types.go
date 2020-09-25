@@ -1,10 +1,15 @@
 package node
 
-import proto "github.com/digital-mob-filecoin/filstats-proto"
+import (
+	"time"
+
+	proto "github.com/digital-mob-filecoin/filstats-proto"
+)
 
 type ChainHead struct {
 	TipsetHeight int64
 	Blocks       []Block
+	ReceivedAt   *time.Time
 }
 
 type Block struct {
@@ -18,6 +23,10 @@ type Block struct {
 func (h *ChainHead) ToChainHeadRequest() *proto.ChainHeadRequest {
 	req := &proto.ChainHeadRequest{}
 	req.TipsetHeight = h.TipsetHeight
+
+	if h.ReceivedAt != nil {
+		req.ReceivedAt = h.ReceivedAt.Format(time.RFC3339Nano)
+	}
 
 	for _, b := range h.Blocks {
 		req.Blocks = append(req.Blocks, &proto.ChainHeadBlock{

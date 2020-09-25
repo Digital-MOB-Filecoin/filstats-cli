@@ -3,9 +3,11 @@ package lotus
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/filecoin-project/go-jsonrpc"
 	"github.com/filecoin-project/lotus/api/apistruct"
+	"github.com/filecoin-project/lotus/chain/types"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
@@ -111,12 +113,15 @@ func (n Node) SubscribeNewHeads(ctx context.Context) (<-chan node.ChainHead, err
 			select {
 			case headChange := <-ch:
 				n.logger.Trace("got head change")
+				receivedAt := time.Now()
+
 			headChangeLoop:
 				for _, hc := range headChange {
 
 					if hc.Val != nil {
 						var head node.ChainHead
 						head.TipsetHeight = int64(hc.Val.Height())
+						head.ReceivedAt = &receivedAt
 
 						for _, b := range hc.Val.Blocks() {
 							msgs, err := n.api.ChainGetBlockMessages(context.Background(), b.Cid())
@@ -146,6 +151,24 @@ func (n Node) SubscribeNewHeads(ctx context.Context) (<-chan node.ChainHead, err
 	}()
 
 	return headChan, nil
+}
+
+func (n Node) PeerID() (string, error) {
+	data, err := n.api.ID(context.Background())
+	if err != nil {
+		return "", errors.Wrap(err, "could not get peer id")
+	}
+
+	return data.String(), nil
+}
+
+func (n Node) MpoolSize() (int64, error) {
+	data, err := n.api.MpoolPending(context.Background(), types.EmptyTSK)
+	if err != nil {
+		return 0, errors.Wrap(err, "could not call MpoolPending")
+	}
+
+	return int64(len(data)), nil
 }
 
 func (n Node) Close() {
