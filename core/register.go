@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"runtime"
 	"time"
 
 	proto "github.com/digital-mob-filecoin/filstats-proto"
@@ -32,6 +33,7 @@ func (c *Core) filstatsRegister(ctx context.Context) error {
 		Name:    c.config.Filstats.ClientName,
 		Version: version,
 		PeerId:  peerId,
+		Os:      runtime.GOOS + "_" + runtime.GOARCH,
 	})
 	if err != nil {
 		return errors.Wrap(err, "could not execute Register request")

@@ -3,7 +3,7 @@ module github.com/digital-mob-filecoin/filstats-cli
 require (
 	github.com/bep/debounce v1.2.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/digital-mob-filecoin/filstats-proto v0.0.0-20200930122802-37782e3b339e
+	github.com/digital-mob-filecoin/filstats-proto v0.0.0-20200930124528-b84af42274da
 	github.com/elazarl/goproxy v0.0.0-20200809112317-0581fc3aee2d // indirect
 	github.com/filecoin-project/go-address v0.0.3 // indirect
 	github.com/filecoin-project/go-jsonrpc v0.1.2-0.20200822201400-474f4fdccc52
