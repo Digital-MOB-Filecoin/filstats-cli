@@ -189,6 +189,25 @@ func (n Node) Syncing() (bool, error) {
 	return isSyncing, nil
 }
 
+func (n Node) NetworkStoragePower() (string, error) {
+	ch, err := n.api.ChainHead(context.Background())
+	if err != nil {
+		return "", errors.Wrap(err, "could not call ChainHead")
+	}
+
+	blocks := ch.Blocks()
+	if len(blocks) == 0 {
+		return "", errors.New("no blocks in current tipset")
+	}
+
+	p, err := n.api.StateMinerPower(context.Background(), blocks[0].Miner, ch.Key())
+	if err != nil {
+		return "", errors.Wrap(err, "could not call StateMinerPower")
+	}
+
+	return p.TotalPower.QualityAdjPower.String(), nil
+}
+
 func (n Node) Close() {
 	n.closer()
 }

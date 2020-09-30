@@ -10,5 +10,6 @@ type Node interface {
 	PeerID() (string, error)
 	MpoolSize() (int64, error)
 	Syncing() (bool, error)
+	NetworkStoragePower() (string, error)
 	Close()
 }

@@ -86,6 +86,10 @@ func (c *Core) Run(ctx context.Context) error {
 		return c.sendSyncing(internalCtx)
 	})
 
+	g.Go(func() error {
+		return c.sendNetworkStoragePower(internalCtx)
+	})
+
 	err = g.Wait()
 	if err != nil {
 		return err
