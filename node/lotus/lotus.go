@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/filecoin-project/go-jsonrpc"
+	"github.com/filecoin-project/lotus/api"
 	"github.com/filecoin-project/lotus/api/apistruct"
 	"github.com/filecoin-project/lotus/chain/types"
 	"github.com/pkg/errors"
@@ -169,6 +170,23 @@ func (n Node) MpoolSize() (int64, error) {
 	}
 
 	return int64(len(data)), nil
+}
+
+func (n Node) Syncing() (bool, error) {
+	data, err := n.api.SyncState(context.Background())
+	if err != nil {
+		return false, errors.Wrap(err, "could not call SyncState")
+	}
+
+	var isSyncing bool
+
+	for _, s := range data.ActiveSyncs {
+		if s.Stage != api.StageSyncComplete {
+			isSyncing = true
+		}
+	}
+
+	return isSyncing, nil
 }
 
 func (n Node) Close() {

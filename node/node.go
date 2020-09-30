@@ -9,5 +9,6 @@ type Node interface {
 	SubscribeNewHeads(ctx context.Context) (<-chan ChainHead, error)
 	PeerID() (string, error)
 	MpoolSize() (int64, error)
+	Syncing() (bool, error)
 	Close()
 }
