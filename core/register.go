@@ -24,6 +24,8 @@ func (c *Core) filstatsRegister(ctx context.Context) error {
 		return err
 	}
 
+	nodeType := c.node.Type()
+
 	peerId, err := c.node.PeerID()
 	if err != nil {
 		return err
@@ -40,6 +42,7 @@ func (c *Core) filstatsRegister(ctx context.Context) error {
 		PeerId:      peerId,
 		Os:          runtime.GOOS + "_" + runtime.GOARCH,
 		NetworkName: networkName,
+		Type:        nodeType,
 	})
 	if err != nil {
 		return errors.Wrap(err, "could not execute Register request")

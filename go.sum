@@ -183,6 +183,8 @@ github.com/digital-mob-filecoin/filstats-proto v0.0.0-20200930131927-5ffd33604ce
 github.com/digital-mob-filecoin/filstats-proto v0.0.0-20200930131927-5ffd33604cec/go.mod h1:ca/QrKstDn8iitQNaYRRmZRWTHmqVds7Bkc2022dB2s=
 github.com/digital-mob-filecoin/filstats-proto v0.0.0-20201005072215-cdc0026ece78 h1:r0FHodPeyDA1gemVaXg+WxxkTPE+bfkthN8DBc7vARI=
 github.com/digital-mob-filecoin/filstats-proto v0.0.0-20201005072215-cdc0026ece78/go.mod h1:ca/QrKstDn8iitQNaYRRmZRWTHmqVds7Bkc2022dB2s=
+github.com/digital-mob-filecoin/filstats-proto v0.0.0-20201005094643-38949e196f55 h1:u7ZnqvucT1uYOmG35KLYve1qjCKGFfjZ0jFOVdimdpQ=
+github.com/digital-mob-filecoin/filstats-proto v0.0.0-20201005094643-38949e196f55/go.mod h1:ca/QrKstDn8iitQNaYRRmZRWTHmqVds7Bkc2022dB2s=
 github.com/docker/go-units v0.4.0 h1:3uh0PgVws3nIA0Q+MwDC8yjEPf9zjRfZZWXZYDct3Tw=
 github.com/docker/go-units v0.4.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDDbaIK4Dk=
 github.com/drand/bls12-381 v0.3.2/go.mod h1:dtcLgPtYT38L3NO6mPDYH0nbpc5tjPassDqiniuAt4Y=
