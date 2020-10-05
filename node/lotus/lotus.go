@@ -48,6 +48,10 @@ func New(config Config) *Node {
 	return n
 }
 
+func (n Node) Type() string {
+	return "lotus"
+}
+
 func (n Node) GetVersion() (string, error) {
 	version, err := n.api.Version(context.Background())
 	if err != nil {

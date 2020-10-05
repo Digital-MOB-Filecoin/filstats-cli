@@ -3,6 +3,7 @@ package node
 import "context"
 
 type Node interface {
+	Type() string
 	GetVersion() (string, error)
 	GetPeers() (int64, error)
 	GetChainHead() (*ChainHead, error)
