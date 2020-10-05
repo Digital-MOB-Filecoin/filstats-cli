@@ -208,6 +208,15 @@ func (n Node) NetworkStoragePower() (string, error) {
 	return p.TotalPower.QualityAdjPower.String(), nil
 }
 
+func (n Node) Network() (string, error) {
+	data, err := n.api.StateNetworkName(context.Background())
+	if err != nil {
+		return "", errors.Wrap(err, "could not call StateNetworkName")
+	}
+
+	return string(data), nil
+}
+
 func (n Node) Close() {
 	n.closer()
 }
