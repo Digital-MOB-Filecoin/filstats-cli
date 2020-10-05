@@ -29,11 +29,17 @@ func (c *Core) filstatsRegister(ctx context.Context) error {
 		return err
 	}
 
+	networkName, err := c.node.Network()
+	if err != nil {
+		return err
+	}
+
 	resp, err := c.filstatsServer.Register(c.contextWithToken(ctx), &proto.RegisterRequest{
-		Name:    c.config.Filstats.ClientName,
-		Version: version,
-		PeerId:  peerId,
-		Os:      runtime.GOOS + "_" + runtime.GOARCH,
+		Name:        c.config.Filstats.ClientName,
+		Version:     version,
+		PeerId:      peerId,
+		Os:          runtime.GOOS + "_" + runtime.GOARCH,
+		NetworkName: networkName,
 	})
 	if err != nil {
 		return errors.Wrap(err, "could not execute Register request")

@@ -11,5 +11,6 @@ type Node interface {
 	MpoolSize() (int64, error)
 	Syncing() (bool, error)
 	NetworkStoragePower() (string, error)
+	Network() (string, error)
 	Close()
 }
