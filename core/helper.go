@@ -16,14 +16,14 @@ func (c *Core) intervalRunner(ctx context.Context, f func() error, interval time
 		if ok {
 			switch st.Code() {
 			case codes.Unauthenticated:
-				return errors.New("[☠] un-registered from Filstats server; triggering reconnect")
+				return errors.New("[ ☠ ] un-registered from Filstats server; triggering reconnect")
 			case codes.Unavailable:
-				c.logger.Error("[✖] could not reach Filstats server")
+				c.logger.Error("[ ✖ ] could not reach Filstats server")
 			default:
 				c.logger.Error(err)
 			}
 		} else {
-			c.logger.Errorf("[✖] could not send request, got: %s", err)
+			c.logger.Errorf("[ ✖ ] could not send request, got: %s", err)
 		}
 	}
 
@@ -38,20 +38,19 @@ func (c *Core) intervalRunner(ctx context.Context, f func() error, interval time
 				if ok {
 					switch st.Code() {
 					case codes.Unauthenticated:
-						return errors.New("[☠] un-registered from Filstats server; triggering reconnect")
+						return errors.New("[ ☠ ] un-registered from Filstats server; triggering reconnect")
 					case codes.Unavailable:
-						c.logger.Error("[✖] could not reach Filstats server")
+						c.logger.Error("[ ✖ ] could not reach Filstats server")
 						continue
 					default:
-						c.logger.Error(err)
+						return err
 					}
 				} else {
-					c.logger.Errorf("[✖] could not send request, got: %s", err)
-
-					continue
+					return err
 				}
 			}
 		case <-ctx.Done():
+			c.logger.Info("context was canceled, stopping")
 			ticker.Stop()
 			return nil
 		}
