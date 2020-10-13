@@ -12,4 +12,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo .
 FROM scratch
 COPY --from=build /filstats-cli/filstats-cli /filstats-cli
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-CMD ["/filstats-cli", "run", "--config=/config/config.yml"]
+
+ENTRYPOINT ["/filstats-cli"]
