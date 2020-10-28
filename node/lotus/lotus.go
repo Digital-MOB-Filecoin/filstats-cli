@@ -78,6 +78,11 @@ func (n Node) GetChainHead() (*node.ChainHead, error) {
 
 	var blocks []node.Block
 
+	currWeight, err := n.api.ChainTipSetWeight(context.Background(), data.Key())
+	if err != nil {
+		return nil, errors.Wrap(err, "could not get current tipset weight")
+	}
+
 	lotusBlocks := data.Blocks()
 
 	for _, b := range lotusBlocks {
@@ -89,6 +94,7 @@ func (n Node) GetChainHead() (*node.ChainHead, error) {
 		blocks = append(blocks, node.Block{
 			Cid:              b.Cid().String(),
 			ParentWeight:     b.ParentWeight.String(),
+			CurrentWeight:    currWeight.String(),
 			Miner:            b.Miner.String(),
 			NumberOfMessages: len(msgs.Cids),
 			Timestamp:        b.Timestamp,
@@ -128,6 +134,12 @@ func (n Node) SubscribeNewHeads(ctx context.Context) (<-chan node.ChainHead, err
 						head.TipsetHeight = int64(hc.Val.Height())
 						head.ReceivedAt = &receivedAt
 
+						currWeight, err := n.api.ChainTipSetWeight(context.Background(), hc.Val.Key())
+						if err != nil {
+							n.logger.Error(err)
+							continue headChangeLoop
+						}
+
 						for _, b := range hc.Val.Blocks() {
 							msgs, err := n.api.ChainGetBlockMessages(context.Background(), b.Cid())
 							if err != nil {
@@ -138,6 +150,7 @@ func (n Node) SubscribeNewHeads(ctx context.Context) (<-chan node.ChainHead, err
 							head.Blocks = append(head.Blocks, node.Block{
 								Cid:              b.Cid().String(),
 								ParentWeight:     b.ParentWeight.String(),
+								CurrentWeight:    currWeight.String(),
 								Miner:            b.Miner.String(),
 								NumberOfMessages: len(msgs.Cids),
 								Timestamp:        b.Timestamp,

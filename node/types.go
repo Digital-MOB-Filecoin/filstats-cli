@@ -15,6 +15,7 @@ type ChainHead struct {
 type Block struct {
 	Cid              string
 	ParentWeight     string
+	CurrentWeight    string
 	Miner            string
 	NumberOfMessages int
 	Timestamp        uint64
@@ -35,6 +36,7 @@ func (h *ChainHead) ToChainHeadRequest() *proto.ChainHeadRequest {
 			Miner:            b.Miner,
 			NumberOfMessages: int64(b.NumberOfMessages),
 			Timestamp:        b.Timestamp,
+			CurrentWeight:    b.CurrentWeight,
 		})
 	}
 
