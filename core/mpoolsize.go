@@ -12,17 +12,25 @@ func (c *Core) sendMpoolSize(ctx context.Context) error {
 	first := true
 	log := c.logger.WithField("_req", "MpoolSize")
 
+	consecutiveFails := 0
+
 	return c.intervalRunner(ctx, func() error {
 		log.Debug("[⇢] outgoing request")
 		start := time.Now()
 
 		mpoolSize, err := c.node.MpoolSize()
 		if err != nil {
-			// todo: handle this better?
 			c.logger.Error(err)
+
+			consecutiveFails++
+			if consecutiveFails >= 5 {
+				return err
+			}
 
 			return nil
 		}
+
+		consecutiveFails = 0
 
 		if mpoolSize == oldSize && !first {
 			log.Debug("[⇎] nothing new to send")

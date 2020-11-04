@@ -7,6 +7,8 @@ import (
 	proto "github.com/digital-mob-filecoin/filstats-proto"
 )
 
+// sendHeartbeat sends a request to the filstats server every HeartbeatInterval
+// this is used to establish the online/offline status of the filstats-cli
 func (c *Core) sendHeartbeat(ctx context.Context) error {
 	log := c.logger.WithField("_req", "Heartbeat")
 

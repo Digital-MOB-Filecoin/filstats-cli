@@ -110,7 +110,7 @@ func (n Node) GetChainHead() (*node.ChainHead, error) {
 func (n Node) SubscribeNewHeads(ctx context.Context) (<-chan node.ChainHead, error) {
 	n.logger.Info("setting up ChainNotify")
 
-	ch, err := n.api.ChainNotify(context.Background())
+	ch, err := n.api.ChainNotify(ctx)
 	if err != nil {
 		return nil, err
 	}

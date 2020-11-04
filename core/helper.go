@@ -9,6 +9,9 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// intervalRunner is a function that executes the function `f` when first called and then every `interval`
+// if the function f returns an error we check to see if it's a gRPC error or something else
+// if the filstats-server returned a `Unauthenticated` error, we must trigger a reconnect
 func (c *Core) intervalRunner(ctx context.Context, f func() error, interval time.Duration) error {
 	err := f()
 	if err != nil {
@@ -24,6 +27,7 @@ func (c *Core) intervalRunner(ctx context.Context, f func() error, interval time
 			}
 		} else {
 			c.logger.Errorf("[ ✖ ] could not send request, got: %s", err)
+			return err
 		}
 	}
 

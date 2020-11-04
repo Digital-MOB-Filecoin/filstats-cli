@@ -12,6 +12,8 @@ func (c *Core) sendPeers(ctx context.Context) error {
 	first := true
 	log := c.logger.WithField("_req", "Peers")
 
+	consecutiveFails := 0
+
 	return c.intervalRunner(ctx, func() error {
 		log.Debug("[⇢] outgoing request")
 		start := time.Now()
@@ -20,8 +22,16 @@ func (c *Core) sendPeers(ctx context.Context) error {
 		if err != nil {
 			// todo: allow multiple fails then crash
 			c.logger.Error(err)
+
+			consecutiveFails++
+			if consecutiveFails >= 5 {
+				return err
+			}
+
 			return nil
 		}
+
+		consecutiveFails = 0
 
 		if peers == oldPeers && !first {
 			log.Debug("[⇎] nothing new to send")

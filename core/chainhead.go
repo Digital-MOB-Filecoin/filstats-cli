@@ -12,8 +12,8 @@ import (
 	"github.com/digital-mob-filecoin/filstats-cli/node"
 )
 
+// filstatsChainHead fetches the current chain head from the node and sends it to filstats-server
 func (c *Core) filstatsChainHead(ctx context.Context) error {
-	// send initial chain head
 	head, err := c.node.GetChainHead()
 	if err != nil {
 		return err
@@ -31,6 +31,9 @@ func (c *Core) filstatsChainHead(ctx context.Context) error {
 	return nil
 }
 
+// watchNewHeads subscribes to the node for new heads and sends them to filstats-server
+// it uses a debouncer to avoid spamming the server with multiple heads; this is helpful because
+// lotus sends chain head changes in rapid succession when a new tipset is found
 func (c *Core) watchNewHeads(ctx context.Context) error {
 	ch, err := c.node.SubscribeNewHeads(ctx)
 	if err != nil {

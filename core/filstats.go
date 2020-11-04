@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
+// initServerConnection handles the connection setup with the filstats server
 func (c *Core) initServerConnection() error {
 	c.logger.WithField("server-addr", c.config.Filstats.ServerAddr).Info("setting up server connection")
 
